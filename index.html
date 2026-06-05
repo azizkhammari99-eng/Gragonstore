@@ -1,10 +1,10 @@
-
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>DRAGON ★ STORE — متجر فري فاير </title>
+  <title>DRAGON ★ STORE — متجر فري فاير السحابي الاحترافي</title>
 
   <!-- SEO Meta -->
   <meta name="description" content="DRAGON STORE - أسرع وأقوى متجر لشحن جواهر فري فاير وبيع الحسابات المميزة في تونس. بيانات سحابية 100% تظهر للجميع" />
@@ -1497,10 +1497,11 @@
   <div class="fullscreen-loader" id="fullscreenLoader">
     <div class="loader-logo">🐉 DRAGON STORE</div>
     <div class="loader-spinner"></div>
-    <div class="loader-text">جاري تحميل البيانات من السحابة ☁️</div>
+    <div class="loader-text">☁️ جاري تحميل البيانات من السحابة...</div>
     <div class="loader-progress-bar">
       <div class="loader-progress-fill" id="loaderProgress"></div>
     </div>
+    <div class="loader-text" style="font-size: 11px; margin-top: 8px;">جميع الحسابات والأسعار تظهر للجميع فوراً!</div>
   </div>
 
   <!-- شريط التحميل العلوي -->
@@ -1569,7 +1570,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">📝 وصف الحساب</label>
-          <textarea class="form-input" id="new-acc-desc" placeholder="تفاصيل الحساب: المستوى، الشخصيات، الأسلحة، الكوستيومات..."></textarea>
+          <textarea class="form-input" id="new-acc-desc" rows="3" placeholder="تفاصيل الحساب: المستوى، الشخصيات، الأسلحة، الكوستيومات..."></textarea>
         </div>
         <button class="btn-admin-primary" onclick="addAccount()">
           <i class="fas fa-cloud-upload-alt"></i> نشر الحساب للسحابة
@@ -1916,8 +1917,8 @@
     // بيانات JSONBin.io - السحابة
     // ============================================================
     // ⚠️ استبدل هذه القيم ببيانات حسابك من JSONBin.io ⚠️
-    const BIN_ID = '6a22f81cda38895dfe8d3be7';
-    const API_KEY = '$2a$10$urQGbJy.PXPJix8vo9Ujru7cwQCHU/JqVzaThXF0I6XEtQsxJt0da';
+    const BIN_ID = '6a230393da38895dfe8d6d91';
+    const API_KEY = '$2a$10$WEm2B45kDa7pLxxHhkf9GuSyRsurOsDXvHMysvFCsWpQ3xvui9LZS';
     
     let ADMIN_USER = 'dragonstore';
     let ADMIN_PASS = 'dragon54321';
@@ -1942,9 +1943,11 @@
     
     // التقييمات الافتراضية
     const DEFAULT_REVIEWS = [
-      { id: 1, name: 'أحمد م.', stars: 5, text: 'خدمة ممتازة وشحن فوري! أنصح الجميع بالتعامل مع DRAGON STORE.', date: '2025-05-10' },
-      { id: 2, name: 'سارة ك.', stars: 5, text: 'اشتريت حساب مميز وكان بالضبط كما وُصف. شكراً جزيلاً!', date: '2025-05-14' },
-      { id: 3, name: 'محمد ع.', stars: 4, text: 'سعر الجواهر منافس جداً والتعامل سريع. سأرجع مجدداً.', date: '2025-05-18' }
+      { id: 1, name: 'أحمد م.', stars: 5, text: 'خدمة ممتازة وشحن فوري! أنصح الجميع بالتعامل مع DRAGON STORE.', date: '2025-01-10' },
+      { id: 2, name: 'سارة ك.', stars: 5, text: 'اشتريت حساب مميز وكان بالضبط كما وُصف. شكراً جزيلاً!', date: '2025-01-14' },
+      { id: 3, name: 'محمد ع.', stars: 4, text: 'سعر الجواهر منافس جداً والتعامل سريع. سأرجع مجدداً.', date: '2025-01-18' },
+      { id: 4, name: 'يوسف التونسي', stars: 5, text: 'والله متجر محترم .. وصلت الجواهر في دقايق ❤️', date: '2025-01-20' },
+      { id: 5, name: 'فري فاير ليجند', stars: 5, text: 'حساب اسطوري وسعر مناسب، شكراً dragon', date: '2025-01-22' }
     ];
     
     // ============================================================
@@ -2225,6 +2228,31 @@
       }
     }
     
+    async function addReview() {
+      const name = document.getElementById('rev-name')?.value.trim();
+      const stars = parseInt(document.getElementById('rev-stars')?.value);
+      const text = document.getElementById('rev-text')?.value.trim();
+      
+      if (!name) { showToast('يرجى إدخال اسم العميل', 'error'); return; }
+      if (!text) { showToast('يرجى إدخال نص التقييم', 'error'); return; }
+      if (isNaN(stars) || stars < 1 || stars > 5) { showToast('التقييم بين 1 و 5', 'error'); return; }
+      
+      cloudReviews.unshift({
+        id: Date.now(),
+        name: name,
+        stars: stars,
+        text: text,
+        date: new Date().toISOString().slice(0, 10)
+      });
+      if (await saveToCloud()) {
+        renderReviews();
+        showToast('✅ تم إضافة التقييم للجميع', 'success');
+        if (document.getElementById('rev-name')) document.getElementById('rev-name').value = '';
+        if (document.getElementById('rev-text')) document.getElementById('rev-text').value = '';
+        if (document.getElementById('rev-stars')) document.getElementById('rev-stars').value = '5';
+      }
+    }
+    
     async function addReviewFromPanel() {
       const name = document.getElementById('rev-name-admin')?.value.trim();
       const stars = parseInt(document.getElementById('rev-stars-admin')?.value);
@@ -2466,11 +2494,12 @@
       }, 500);
       
       // إظهار مودال الترحيب للمرة الأولى
-      if (!localStorage.getItem('visited_dragon_cloud_final')) {
+      if (!localStorage.getItem('visited_dragon_cloud_final_v2')) {
         setTimeout(() => openModal('welcome-modal'), 1500);
-        localStorage.setItem('visited_dragon_cloud_final', 'true');
+        localStorage.setItem('visited_dragon_cloud_final_v2', 'true');
       }
     })();
   </script>
 </body>
 </html>
+```
