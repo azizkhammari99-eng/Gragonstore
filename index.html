@@ -1,14 +1,21 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DRAGON ★ STORE — متجر فري فاير</title>
+  <title>DRAGON ★ STORE — متجر فري فاير الاحترافي</title>
 
-  <!-- خطوط جوجل -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Rajdhani:wght@600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
-  <!-- أيقونات FontAwesome -->
+  <!-- SEO Meta★ -->
+  <meta name="description" content="DRAGON STORE - أسرع وأقوى متجر لشحن جواهر فري فاير وبيع الحسابات المميزة في تونس" />
+  <meta name="keywords" content="فري فاير,شحن جواهر,حسابات فري فاير,متجر فري فاير تونس" />
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
   <style>
     /* ============================================================
@@ -44,17 +51,25 @@
       color: var(--text-main);
       min-height: 100vh;
       overflow-x: hidden;
+      position: relative;
     }
 
-    /* خلفية نقطية متحركة */
+    /* خلفية نقطية متحركة احترافية */
     body::before {
       content: '';
       position: fixed; inset: 0; z-index: 0;
       background-image:
-        radial-gradient(circle at 20% 50%, rgba(255,70,85,0.06) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(0,229,255,0.04) 0%, transparent 40%),
-        radial-gradient(circle at 50% 80%, rgba(255,215,0,0.04) 0%, transparent 40%);
+        radial-gradient(circle at 20% 50%, rgba(255,70,85,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0,229,255,0.06) 0%, transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(255,215,0,0.06) 0%, transparent 40%),
+        repeating-linear-gradient(45deg, rgba(255,70,85,0.02) 0px, rgba(255,70,85,0.02) 2px, transparent 2px, transparent 8px);
       pointer-events: none;
+      animation: bgPulse 15s ease-in-out infinite;
+    }
+
+    @keyframes bgPulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
     }
 
     a { color: inherit; text-decoration: none; }
@@ -68,6 +83,21 @@
       position: relative; z-index: 1;
     }
 
+    /* شريط التحميل العلوي */
+    .loading-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--red), var(--gold), var(--cyan));
+      z-index: 10001;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .loading-bar.active { transform: scaleX(1); }
+
     /* ============================================================
        أيقونة الأدمن (قفل ثابت)
     ============================================================ */
@@ -75,25 +105,53 @@
       position: fixed;
       top: 16px; left: 16px;
       z-index: 9999;
-      width: 44px; height: 44px;
+      width: 48px; height: 48px;
       border-radius: 50%;
       background: rgba(255,70,85,0.12);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      font-size: 16px;
+      font-size: 18px;
       display: flex; align-items: center; justify-content: center;
       transition: var(--transition);
       backdrop-filter: blur(8px);
+      cursor: pointer;
     }
-    #admin-lock-btn:hover { background: var(--red-glow); color: var(--red); border-color: var(--red); }
-    #admin-lock-btn.active { background: rgba(255,215,0,0.15); color: var(--gold); border-color: var(--gold); }
+    #admin-lock-btn:hover { background: var(--red-glow); color: var(--red); border-color: var(--red); transform: scale(1.05); }
+    #admin-lock-btn.active { background: rgba(255,215,0,0.2); color: var(--gold); border-color: var(--gold); box-shadow: 0 0 15px var(--gold-glow); }
+
+    /* ============================================================
+       رقم التواصل الثابت
+    ============================================================ */
+    .contact-number {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      z-index: 999;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      padding: 12px 22px;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      transition: var(--transition);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .contact-number:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 28px rgba(37,211,102,0.5);
+    }
+    .contact-number i { font-size: 20px; }
 
     /* ============================================================
        الهيدر / الشريط العلوي
     ============================================================ */
     header {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(10,14,20,0.9);
+      background: rgba(10,14,20,0.92);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
       padding: 14px 0;
@@ -108,21 +166,23 @@
 
     .logo {
       font-family: 'Orbitron', sans-serif;
-      font-size: clamp(18px, 3vw, 26px);
+      font-size: clamp(18px, 3vw, 28px);
       font-weight: 900;
       letter-spacing: 2px;
-      background: linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);
+      background: linear-gradient(135deg, var(--red) 0%, var(--gold) 50%, var(--cyan) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      transition: var(--transition);
     }
+    .logo:hover { transform: scale(1.02); letter-spacing: 3px; }
 
-    nav { display: flex; gap: 6px; flex-wrap: wrap; }
+    nav { display: flex; gap: 8px; flex-wrap: wrap; }
 
     nav a {
-      padding: 7px 14px;
-      border-radius: 8px;
-      font-size: 13px;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-muted);
       transition: var(--transition);
@@ -132,40 +192,14 @@
       color: var(--red);
       background: var(--red-glow);
       border-color: var(--border);
-    }
-
-    /* رقم التواصل الثابت */
-    .contact-number {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      z-index: 999;
-      background: linear-gradient(135deg, #25D366, #128C7E);
-      padding: 10px 18px;
-      border-radius: 50px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      color: white;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      transition: var(--transition);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-    .contact-number:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(37,211,102,0.4);
-    }
-    .contact-number i {
-      font-size: 18px;
+      transform: translateY(-2px);
     }
 
     /* ============================================================
        الـ Hero Section
     ============================================================ */
     .hero {
-      padding: 80px 0 60px;
+      padding: 100px 0 80px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -177,117 +211,145 @@
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       font-family: 'Orbitron', sans-serif;
-      font-size: clamp(80px, 18vw, 220px);
+      font-size: clamp(80px, 18vw, 240px);
       font-weight: 900;
-      color: rgba(255,70,85,0.04);
+      color: rgba(255,70,85,0.03);
       white-space: nowrap;
       pointer-events: none;
       user-select: none;
+      animation: heroTextPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes heroTextPulse {
+      0%, 100% { opacity: 0.03; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 0.06; transform: translate(-50%, -50%) scale(1.02); }
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 50% 50%, transparent 0%, var(--bg-deep) 100%);
+      pointer-events: none;
     }
 
     .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255,215,0,0.1);
+      background: rgba(255,215,0,0.12);
       border: 1px solid var(--border-gold);
       border-radius: 50px;
-      padding: 6px 16px;
-      font-size: 12px;
+      padding: 8px 20px;
+      font-size: 13px;
       color: var(--gold);
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       animation: fadeDown 0.6s ease both;
+      backdrop-filter: blur(4px);
     }
 
     .hero h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: clamp(28px, 6vw, 64px);
+      font-size: clamp(32px, 7vw, 72px);
       font-weight: 900;
       line-height: 1.15;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
       animation: fadeDown 0.7s ease both;
+      text-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
 
-    .hero h1 span { color: var(--red); }
+    .hero h1 span { 
+      background: linear-gradient(135deg, var(--red), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
 
     .hero p {
       font-size: clamp(14px, 2vw, 18px);
       color: var(--text-muted);
-      max-width: 560px;
-      margin: 0 auto 32px;
+      max-width: 600px;
+      margin: 0 auto 36px;
       animation: fadeDown 0.8s ease both;
     }
 
     .hero-btns {
-      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+      display: flex; gap: 18px; justify-content: center; flex-wrap: wrap;
       animation: fadeDown 0.9s ease both;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--red) 0%, #c0392b 100%);
       color: #fff;
-      padding: 13px 28px;
-      border-radius: 10px;
-      font-size: 15px;
+      padding: 14px 34px;
+      border-radius: 50px;
+      font-size: 16px;
       font-weight: 700;
       transition: var(--transition);
       box-shadow: 0 4px 24px var(--red-glow);
-      display: inline-flex; align-items: center; gap: 8px;
+      display: inline-flex; align-items: center; gap: 10px;
     }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--red-glow); }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 36px var(--red-glow); }
 
     .btn-outline {
       background: transparent;
       color: var(--gold);
-      padding: 12px 28px;
-      border-radius: 10px;
-      font-size: 15px;
+      padding: 13px 34px;
+      border-radius: 50px;
+      font-size: 16px;
       font-weight: 700;
-      border: 1.5px solid var(--gold);
+      border: 2px solid var(--gold);
       transition: var(--transition);
-      display: inline-flex; align-items: center; gap: 8px;
+      display: inline-flex; align-items: center; gap: 10px;
     }
-    .btn-outline:hover { background: rgba(255,215,0,0.1); transform: translateY(-2px); }
+    .btn-outline:hover { background: rgba(255,215,0,0.12); transform: translateY(-3px); box-shadow: 0 4px 20px var(--gold-glow); }
 
     /* ============================================================
        عناوين الأقسام
     ============================================================ */
     .section-header {
       text-align: center;
-      margin-bottom: 48px;
+      margin-bottom: 56px;
     }
 
     .section-label {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       text-transform: uppercase;
       color: var(--red);
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .section-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: clamp(22px, 4vw, 38px);
+      font-size: clamp(24px, 4vw, 42px);
       font-weight: 700;
       position: relative;
       display: inline-block;
+      background: linear-gradient(135deg, #fff, var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
     .section-title::after {
       content: '';
       display: block;
-      width: 60px; height: 3px;
-      background: linear-gradient(90deg, var(--red), var(--gold));
-      border-radius: 2px;
-      margin: 12px auto 0;
+      width: 80px; height: 4px;
+      background: linear-gradient(90deg, var(--red), var(--gold), var(--cyan));
+      border-radius: 4px;
+      margin: 16px auto 0;
     }
 
     .section-desc {
       color: var(--text-muted);
-      font-size: 15px;
-      margin-top: 12px;
+      font-size: 16px;
+      margin-top: 16px;
     }
 
     /* ============================================================
@@ -297,84 +359,95 @@
 
     .diamonds-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 24px;
     }
 
     .diamond-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 28px 20px;
+      padding: 32px 20px;
       text-align: center;
       position: relative;
       overflow: hidden;
       transition: var(--transition);
       cursor: default;
+      backdrop-filter: blur(4px);
     }
 
     .diamond-card::before {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,70,85,0.06), transparent);
+      background: linear-gradient(135deg, rgba(255,70,85,0.08), transparent);
       opacity: 0;
       transition: var(--transition);
     }
 
-    .diamond-card:hover { border-color: var(--red); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(255,70,85,0.15); }
+    .diamond-card:hover { 
+      border-color: var(--red); 
+      transform: translateY(-6px); 
+      box-shadow: 0 16px 48px rgba(255,70,85,0.2);
+    }
     .diamond-card:hover::before { opacity: 1; }
 
     .diamond-card.featured {
       border-color: var(--gold);
-      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(255,215,0,0.05) 100%);
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(255,215,0,0.08) 100%);
     }
-    .diamond-card.featured:hover { box-shadow: 0 12px 40px var(--gold-glow); }
+    .diamond-card.featured:hover { box-shadow: 0 16px 48px var(--gold-glow); }
 
     .diamond-badge {
-      position: absolute; top: 12px; right: 12px;
+      position: absolute; top: 14px; right: 14px;
       background: var(--gold);
       color: #0a0e14;
-      font-size: 10px; font-weight: 700;
-      padding: 3px 9px; border-radius: 50px;
+      font-size: 11px; font-weight: 800;
+      padding: 4px 12px; border-radius: 50px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     .diamond-icon {
-      font-size: 42px;
-      margin-bottom: 12px;
+      font-size: 52px;
+      margin-bottom: 16px;
       display: block;
-      filter: drop-shadow(0 0 10px rgba(0,229,255,0.5));
+      filter: drop-shadow(0 0 12px var(--cyan-glow));
       animation: floatIcon 3s ease-in-out infinite;
     }
 
     .diamond-amount {
       font-family: 'Orbitron', sans-serif;
-      font-size: 22px; font-weight: 700;
+      font-size: 24px; font-weight: 700;
       color: var(--cyan);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
-    .diamond-label { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+    .diamond-label { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
 
     .diamond-price {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 28px; font-weight: 700;
+      font-size: 32px; font-weight: 700;
       color: var(--gold);
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     .diamond-price .currency { font-size: 14px; color: var(--text-muted); }
 
     .btn-contact {
-      display: inline-flex; align-items: center; gap: 8px;
+      display: inline-flex; align-items: center; gap: 10px;
       background: linear-gradient(135deg, #25D366, #128C7E);
       color: #fff;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 13px; font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 14px; font-weight: 700;
       transition: var(--transition);
       width: 100%; justify-content: center;
     }
-    .btn-contact:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-contact:hover { opacity: 0.88; transform: translateY(-2px); }
 
     /* ============================================================
        قسم الحسابات
@@ -383,198 +456,206 @@
 
     /* بانر البيع */
     .sell-banner {
-      background: linear-gradient(135deg, rgba(255,70,85,0.12) 0%, rgba(255,215,0,0.08) 100%);
+      background: linear-gradient(135deg, rgba(255,70,85,0.15) 0%, rgba(255,215,0,0.1) 100%);
       border: 1px solid var(--border-gold);
-      border-radius: var(--radius);
-      padding: 20px 28px;
+      border-radius: 24px;
+      padding: 24px 32px;
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin-bottom: 40px;
+      gap: 20px;
+      margin-bottom: 48px;
       flex-wrap: wrap;
+      backdrop-filter: blur(4px);
     }
 
-    .sell-banner-icon { font-size: 32px; flex-shrink: 0; }
+    .sell-banner-icon { font-size: 42px; flex-shrink: 0; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    .sell-banner-text h3 { font-size: 17px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
-    .sell-banner-text p { font-size: 13px; color: var(--text-muted); }
+    .sell-banner-text h3 { font-size: 20px; font-weight: 800; color: var(--gold); margin-bottom: 6px; }
+    .sell-banner-text p { font-size: 14px; color: var(--text-muted); }
 
     .sell-banner-link {
       margin-right: auto;
       background: linear-gradient(135deg, #25D366, #128C7E);
       color: #fff;
-      padding: 10px 22px;
-      border-radius: 8px;
-      font-size: 13px; font-weight: 700;
-      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 14px; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 10px;
       transition: var(--transition);
       white-space: nowrap;
     }
-    .sell-banner-link:hover { opacity: 0.88; transform: translateY(-1px); }
+    .sell-banner-link:hover { opacity: 0.9; transform: translateY(-2px); }
 
     /* شبكة الحسابات */
     .accounts-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 28px;
     }
 
     .account-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 20px;
       overflow: hidden;
       transition: var(--transition);
       position: relative;
       display: flex; flex-direction: column;
     }
 
-    .account-card:hover { border-color: var(--red); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(255,70,85,0.12); }
+    .account-card:hover { border-color: var(--red); transform: translateY(-6px); box-shadow: 0 16px 48px rgba(255,70,85,0.15); }
 
-    .account-card.sold { opacity: 0.6; pointer-events: none; }
+    .account-card.sold { opacity: 0.6; pointer-events: none; position: relative; }
     .account-card.sold::after {
       content: 'SOLD OUT';
       position: absolute; inset: 0;
-      background: rgba(10,14,20,0.75);
+      background: rgba(10,14,20,0.85);
       display: flex; align-items: center; justify-content: center;
       font-family: 'Orbitron', sans-serif;
-      font-size: 28px; font-weight: 900;
+      font-size: 32px; font-weight: 900;
       color: var(--red);
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       pointer-events: none;
+      z-index: 2;
     }
 
     .account-img {
-      width: 100%; height: 200px;
+      width: 100%; height: 220px;
       object-fit: cover;
       background: var(--bg-panel);
     }
 
     .account-img-placeholder {
-      width: 100%; height: 200px;
-      background: linear-gradient(135deg, var(--bg-panel) 0%, rgba(255,70,85,0.08) 100%);
+      width: 100%; height: 220px;
+      background: linear-gradient(135deg, var(--bg-panel) 0%, rgba(255,70,85,0.12) 100%);
       display: flex; align-items: center; justify-content: center;
-      font-size: 48px; color: var(--text-muted);
+      font-size: 56px; color: var(--text-muted);
     }
 
-    .account-body { padding: 18px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+    .account-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
 
     .account-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; flex: 1; }
 
     .account-price {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 26px; font-weight: 700;
+      font-size: 28px; font-weight: 700;
       color: var(--gold);
     }
 
-    .account-footer { padding: 0 18px 18px; }
+    .account-footer { padding: 0 20px 20px; }
 
     .btn-buy {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
       background: linear-gradient(135deg, #25D366, #128C7E);
       color: #fff;
-      padding: 11px;
-      border-radius: 9px;
-      font-size: 14px; font-weight: 700;
+      padding: 12px;
+      border-radius: 50px;
+      font-size: 15px; font-weight: 700;
       width: 100%;
       transition: var(--transition);
       box-shadow: 0 4px 16px rgba(37,211,102,0.2);
     }
-    .btn-buy:hover { box-shadow: 0 6px 24px rgba(37,211,102,0.4); transform: translateY(-1px); }
+    .btn-buy:hover { box-shadow: 0 8px 24px rgba(37,211,102,0.4); transform: translateY(-2px); }
 
     /* أزرار الأدمن للحسابات */
     .admin-account-btns {
       display: none;
-      gap: 8px;
-      padding: 0 18px 14px;
+      gap: 10px;
+      padding: 0 20px 16px;
     }
     body.admin-mode .admin-account-btns { display: flex; }
 
     .btn-admin-sm {
       flex: 1;
-      padding: 8px;
-      border-radius: 7px;
-      font-size: 12px; font-weight: 600;
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 13px; font-weight: 600;
       transition: var(--transition);
+      cursor: pointer;
     }
 
-    .btn-toggle-sold { background: rgba(255,215,0,0.12); color: var(--gold); border: 1px solid var(--border-gold); }
-    .btn-toggle-sold:hover { background: rgba(255,215,0,0.22); }
+    .btn-toggle-sold { background: rgba(255,215,0,0.15); color: var(--gold); border: 1px solid var(--border-gold); }
+    .btn-toggle-sold:hover { background: rgba(255,215,0,0.3); transform: scale(1.02); }
+
+    .btn-edit-account { background: rgba(0,229,255,0.12); color: var(--cyan); border: 1px solid rgba(0,229,255,0.2); }
+    .btn-edit-account:hover { background: rgba(0,229,255,0.25); transform: scale(1.02); }
 
     .btn-delete-account { background: rgba(255,70,85,0.12); color: var(--red); border: 1px solid var(--border); }
-    .btn-delete-account:hover { background: rgba(255,70,85,0.25); }
+    .btn-delete-account:hover { background: rgba(255,70,85,0.3); transform: scale(1.02); }
 
     .empty-accounts {
       grid-column: 1 / -1;
       text-align: center;
-      padding: 60px 20px;
+      padding: 80px 20px;
       color: var(--text-muted);
     }
-    .empty-accounts i { font-size: 48px; margin-bottom: 16px; display: block; opacity: 0.4; }
+    .empty-accounts i { font-size: 64px; margin-bottom: 20px; display: block; opacity: 0.5; }
 
     /* ============================================================
        قسم التقييمات
     ============================================================ */
-    #reviews { padding: 80px 0; background: rgba(15,21,33,0.5); }
+    #reviews { padding: 80px 0; background: rgba(15,21,33,0.6); }
 
     .reviews-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      margin-bottom: 32px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
     }
 
     .review-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 22px;
+      border-radius: 20px;
+      padding: 24px;
       position: relative;
       transition: var(--transition);
     }
-    .review-card:hover { border-color: var(--gold); box-shadow: 0 8px 28px var(--gold-glow); }
+    .review-card:hover { border-color: var(--gold); transform: translateY(-4px); box-shadow: 0 12px 32px var(--gold-glow); }
 
-    .review-stars { color: var(--gold); font-size: 14px; margin-bottom: 10px; }
+    .review-stars { color: var(--gold); font-size: 16px; margin-bottom: 12px; letter-spacing: 2px; }
 
-    .review-text { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 14px; }
+    .review-text { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
 
     .review-author {
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: center; gap: 12px;
     }
 
     .review-avatar {
-      width: 38px; height: 38px; border-radius: 50%;
+      width: 44px; height: 44px; border-radius: 50%;
       background: linear-gradient(135deg, var(--red), var(--gold));
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0;
+      font-size: 18px; font-weight: 700; color: #fff; flex-shrink: 0;
     }
 
-    .review-name { font-size: 14px; font-weight: 700; }
-    .review-date { font-size: 11px; color: var(--text-muted); }
+    .review-name { font-size: 15px; font-weight: 700; }
+    .review-date { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
 
     .btn-delete-review {
       display: none;
-      position: absolute; top: 12px; left: 12px;
-      background: rgba(255,70,85,0.15);
+      position: absolute; top: 16px; left: 16px;
+      background: rgba(255,70,85,0.2);
       color: var(--red);
       border: none;
-      width: 28px; height: 28px;
-      border-radius: 6px;
-      font-size: 12px;
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      font-size: 14px;
       align-items: center; justify-content: center;
       transition: var(--transition);
+      cursor: pointer;
     }
     body.admin-mode .btn-delete-review { display: flex; }
-    .btn-delete-review:hover { background: var(--red); color: #fff; }
+    .btn-delete-review:hover { background: var(--red); color: #fff; transform: scale(1.05); }
 
     /* نموذج إضافة تقييم (للأدمن) */
     #add-review-form {
       display: none;
       background: var(--bg-card);
       border: 1px solid var(--border-gold);
-      border-radius: var(--radius);
-      padding: 24px;
-      max-width: 500px;
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 550px;
       margin: 0 auto;
     }
     body.admin-mode #add-review-form { display: block; }
@@ -586,92 +667,96 @@
       display: none;
       background: var(--bg-panel);
       border: 1px solid var(--border-gold);
-      border-radius: var(--radius);
-      padding: 28px;
-      margin: 24px 0;
+      border-radius: 24px;
+      padding: 32px;
+      margin: 32px 0;
+      backdrop-filter: blur(4px);
     }
     body.admin-mode #admin-panel { display: block; }
 
     .admin-panel-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: 18px; font-weight: 700;
+      font-size: 20px; font-weight: 700;
       color: var(--gold);
-      margin-bottom: 24px;
-      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 28px;
+      display: flex; align-items: center; gap: 12px;
     }
 
     .admin-tabs {
-      display: flex; gap: 8px; flex-wrap: wrap;
-      margin-bottom: 24px;
+      display: flex; gap: 12px; flex-wrap: wrap;
+      margin-bottom: 28px;
     }
 
     .admin-tab {
-      padding: 8px 18px;
-      border-radius: 8px;
-      font-size: 13px; font-weight: 600;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 14px; font-weight: 600;
       background: rgba(255,255,255,0.05);
       color: var(--text-muted);
       border: 1px solid var(--border);
       transition: var(--transition);
+      cursor: pointer;
     }
-    .admin-tab.active { background: rgba(255,215,0,0.12); color: var(--gold); border-color: var(--border-gold); }
+    .admin-tab.active { background: rgba(255,215,0,0.15); color: var(--gold); border-color: var(--border-gold); }
+    .admin-tab:hover { transform: translateY(-2px); }
 
     .admin-tab-content { display: none; }
     .admin-tab-content.active { display: block; }
 
     /* نماذج الأدمن */
-    .form-group { margin-bottom: 16px; }
+    .form-group { margin-bottom: 20px; }
 
     .form-label {
       display: block;
-      font-size: 13px; font-weight: 600;
+      font-size: 14px; font-weight: 600;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .form-input {
       width: 100%;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.07);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 11px 14px;
+      border-radius: 12px;
+      padding: 12px 16px;
       font-family: 'Cairo', sans-serif;
       font-size: 14px;
       color: var(--text-main);
       direction: rtl;
       transition: var(--transition);
     }
-    .form-input:focus { border-color: var(--red); outline: none; background: rgba(255,70,85,0.05); }
+    .form-input:focus { border-color: var(--red); outline: none; background: rgba(255,70,85,0.08); transform: scale(1.01); }
 
-    textarea.form-input { resize: vertical; min-height: 90px; }
+    textarea.form-input { resize: vertical; min-height: 100px; }
 
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
     .btn-admin-primary {
       background: linear-gradient(135deg, var(--gold), #e6a800);
       color: #0a0e14;
-      padding: 11px 24px;
-      border-radius: 9px;
-      font-size: 14px; font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 15px; font-weight: 700;
       transition: var(--transition);
+      cursor: pointer;
     }
-    .btn-admin-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-admin-primary:hover { opacity: 0.9; transform: translateY(-2px); }
 
     /* تعديل الأسعار */
     .price-edit-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
     }
 
     .price-edit-item {
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.04);
       border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 14px;
+      border-radius: 14px;
+      padding: 16px;
     }
 
-    .price-edit-label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+    .price-edit-label { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; font-weight: 600; }
 
     /* ============================================================
        الفوتر
@@ -679,40 +764,40 @@
     footer {
       background: var(--bg-panel);
       border-top: 1px solid var(--border);
-      padding: 48px 0 24px;
+      padding: 56px 0 28px;
       margin-top: 80px;
     }
 
     .footer-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 36px;
-      margin-bottom: 36px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 48px;
+      margin-bottom: 48px;
     }
 
-    .footer-brand .logo { font-size: 22px; margin-bottom: 12px; display: block; }
+    .footer-brand .logo { font-size: 24px; margin-bottom: 16px; display: inline-block; }
     .footer-brand p { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
 
-    .footer-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 14px; }
+    .footer-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 18px; }
 
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .footer-links a { font-size: 13px; color: var(--text-muted); transition: var(--transition); }
-    .footer-links a:hover { color: var(--red); }
+    .footer-links a:hover { color: var(--red); transform: translateX(-5px); display: inline-block; }
 
-    .social-links { display: flex; gap: 10px; margin-top: 14px; }
+    .social-links { display: flex; gap: 12px; margin-top: 18px; }
     .social-link {
-      width: 38px; height: 38px; border-radius: 9px;
-      background: rgba(255,255,255,0.05);
+      width: 42px; height: 42px; border-radius: 12px;
+      background: rgba(255,255,255,0.06);
       border: 1px solid var(--border);
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px; color: var(--text-muted);
+      font-size: 18px; color: var(--text-muted);
       transition: var(--transition);
     }
-    .social-link:hover { background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border-color: transparent; }
+    .social-link:hover { background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border-color: transparent; transform: translateY(-3px); }
 
     .footer-bottom {
       border-top: 1px solid var(--border);
-      padding-top: 20px;
+      padding-top: 24px;
       text-align: center;
       font-size: 12px;
       color: var(--text-muted);
@@ -722,9 +807,9 @@
        المودالات (Modals)
     ============================================================ */
     .modal-overlay {
-      position: fixed; inset: 0; z-index: 9000;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(8px);
+      position: fixed; inset: 0; z-index: 10000;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
       display: flex; align-items: center; justify-content: center;
       padding: 20px;
       opacity: 0; visibility: hidden;
@@ -735,9 +820,9 @@
     .modal {
       background: var(--bg-panel);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-      max-width: 440px; width: 100%;
+      border-radius: 28px;
+      padding: 36px;
+      max-width: 480px; width: 100%;
       transform: scale(0.95) translateY(20px);
       transition: var(--transition);
       position: relative;
@@ -745,59 +830,60 @@
     .modal-overlay.open .modal { transform: scale(1) translateY(0); }
 
     .modal-close {
-      position: absolute; top: 16px; left: 16px;
-      background: rgba(255,255,255,0.06);
+      position: absolute; top: 20px; left: 20px;
+      background: rgba(255,255,255,0.08);
       color: var(--text-muted);
-      width: 32px; height: 32px;
-      border-radius: 8px;
+      width: 36px; height: 36px;
+      border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 14px; transition: var(--transition);
+      font-size: 16px; transition: var(--transition);
+      cursor: pointer;
     }
-    .modal-close:hover { background: var(--red-glow); color: var(--red); }
+    .modal-close:hover { background: var(--red-glow); color: var(--red); transform: rotate(90deg); }
 
     .modal-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: 20px; font-weight: 700;
+      font-size: 24px; font-weight: 700;
       color: var(--gold);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
-    .modal-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+    .modal-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; }
 
     /* مودال الترحيب */
     .welcome-visual {
-      text-align: center; margin-bottom: 24px;
+      text-align: center; margin-bottom: 28px;
     }
-    .welcome-visual .big-icon { font-size: 64px; animation: floatIcon 3s ease-in-out infinite; display: block; margin-bottom: 8px; }
+    .welcome-visual .big-icon { font-size: 80px; animation: floatIcon 3s ease-in-out infinite; display: block; margin-bottom: 12px; }
     .welcome-badge {
       display: inline-block;
       background: var(--red-glow);
       border: 1px solid var(--red);
       color: var(--red);
-      font-size: 11px; font-weight: 700;
-      padding: 4px 12px; border-radius: 50px;
-      letter-spacing: 2px;
+      font-size: 12px; font-weight: 700;
+      padding: 6px 16px; border-radius: 50px;
+      letter-spacing: 3px;
     }
 
-    .welcome-features { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+    .welcome-features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
     .welcome-feat {
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.05);
       border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 12px;
-      font-size: 13px;
-      display: flex; align-items: center; gap: 8px;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 14px;
+      display: flex; align-items: center; gap: 10px;
     }
-    .welcome-feat i { color: var(--gold); font-size: 16px; }
+    .welcome-feat i { color: var(--gold); font-size: 18px; }
 
     /* مودال تسجيل الدخول */
     .login-error {
-      background: rgba(255,70,85,0.1);
+      background: rgba(255,70,85,0.12);
       border: 1px solid var(--red);
-      border-radius: 8px;
-      padding: 10px 14px;
+      border-radius: 12px;
+      padding: 12px 16px;
       font-size: 13px; color: var(--red);
-      margin-bottom: 14px;
+      margin-bottom: 18px;
       display: none;
     }
 
@@ -805,23 +891,23 @@
        Notifications (إشعارات)
     ============================================================ */
     #notifications {
-      position: fixed; bottom: 20px; right: 20px;
-      z-index: 9998;
-      display: flex; flex-direction: column; gap: 10px;
+      position: fixed; bottom: 24px; right: 24px;
+      z-index: 10001;
+      display: flex; flex-direction: column; gap: 12px;
       pointer-events: none;
     }
 
     .notif {
       background: var(--bg-panel);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-size: 13px; font-weight: 600;
-      display: flex; align-items: center; gap: 10px;
-      min-width: 240px;
+      border-radius: 14px;
+      padding: 14px 20px;
+      font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; gap: 12px;
+      min-width: 260px;
       pointer-events: all;
       animation: slideInRight 0.35s ease both;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.5);
     }
     .notif.success { border-color: #2ecc71; color: #2ecc71; }
     .notif.error { border-color: var(--red); color: var(--red); }
@@ -831,66 +917,91 @@
     /* ============================================================
        تحرير الحساب (Admin) — نافذة منبثقة
     ============================================================ */
-    #edit-account-modal .modal { max-width: 500px; }
+    #edit-account-modal .modal { max-width: 550px; }
 
     /* ============================================================
        Keyframes
     ============================================================ */
     @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-16px); }
+      from { opacity: 0; transform: translateY(-24px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes floatIcon {
       0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-8px); }
+      50%       { transform: translateY(-10px); }
     }
 
     @keyframes slideInRight {
-      from { opacity: 0; transform: translateX(40px); }
+      from { opacity: 0; transform: translateX(60px); }
       to   { opacity: 1; transform: translateX(0); }
     }
 
     @keyframes slideOutRight {
       from { opacity: 1; transform: translateX(0); }
-      to   { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 0; transform: translateX(60px); }
     }
 
     /* ============================================================
        Responsive
     ============================================================ */
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       .hero { padding: 60px 0 40px; }
       .form-row { grid-template-columns: 1fr; }
       .welcome-features { grid-template-columns: 1fr; }
       nav { display: none; }
       .sell-banner { flex-direction: column; text-align: center; }
       .sell-banner-link { margin-right: 0; }
+      .footer-grid { gap: 32px; }
+      .admin-tabs { justify-content: center; }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 0 16px; }
+      .diamonds-grid { grid-template-columns: 1fr; }
+      .accounts-grid { grid-template-columns: 1fr; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .modal { padding: 24px; }
     }
 
     /* ============================================================
-       Scrollbar مخصص
+       Scrollbar مخصص احترافي
     ============================================================ */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-deep); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--red); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, var(--red), var(--gold)); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, var(--gold), var(--red)); }
+
+    /* تأثيرات إضافية */
+    .glow-text {
+      text-shadow: 0 0 10px var(--red-glow);
+    }
+
+    .hover-scale {
+      transition: var(--transition);
+    }
+    .hover-scale:hover {
+      transform: scale(1.02);
+    }
   </style>
 </head>
 <body>
+
+  <!-- شريط التحميل -->
+  <div class="loading-bar" id="loadingBar"></div>
 
   <!-- ============================================================
        أيقونة القفل (وصول لوحة الأدمن)
   ============================================================ -->
   <button id="admin-lock-btn" title="لوحة التحكم">
-    <i class="fas fa-lock" id="lock-icon"></i>
+    <i class="fas fa-crown" id="lock-icon"></i>
   </button>
 
   <!-- ============================================================
        رقم التواصل الثابت
   ============================================================ -->
   <a href="https://wa.me/21623127209" target="_blank" class="contact-number">
-    <i class="fab fa-whatsapp"></i>
+    <i class="fab fa-whatsapp fa-lg"></i>
     <span>+216 23 127 209</span>
   </a>
 
@@ -899,7 +1010,7 @@
   ============================================================ -->
   <header>
     <div class="container header-inner">
-      <a href="#" class="logo">DRAGON ★ STORE</a>
+      <a href="#" class="logo"><i class="fas fa-dragon"></i> DRAGON ★ STORE</a>
       <nav>
         <a href="#diamonds" class="active">💎 الجواهر</a>
         <a href="#accounts">🎮 الحسابات</a>
@@ -915,8 +1026,8 @@
     <div id="admin-panel">
       <div class="admin-panel-title">
         <i class="fas fa-shield-halved"></i>
-        لوحة التحكم الإدارية
-        <button onclick="logoutAdmin()" style="margin-right:auto;background:rgba(255,70,85,0.12);color:var(--red);border:1px solid var(--border);padding:7px 16px;border-radius:8px;font-size:12px;font-family:'Cairo',sans-serif;cursor:pointer;transition:var(--transition)">
+        لوحة التحكم الإدارية - DRAGON
+        <button onclick="logoutAdmin()" style="margin-right:auto;background:rgba(255,70,85,0.15);color:var(--red);border:1px solid var(--border);padding:8px 18px;border-radius:50px;font-size:13px;font-family:'Cairo',sans-serif;cursor:pointer;transition:var(--transition)">
           <i class="fas fa-right-from-bracket"></i> تسجيل خروج
         </button>
       </div>
@@ -925,55 +1036,56 @@
         <button class="admin-tab active" onclick="switchAdminTab('accounts-tab', this)">➕ إضافة حساب</button>
         <button class="admin-tab" onclick="switchAdminTab('prices-tab', this)">💰 تعديل الأسعار</button>
         <button class="admin-tab" onclick="switchAdminTab('settings-tab', this)">⚙️ إعدادات الموقع</button>
+        <button class="admin-tab" onclick="switchAdminTab('reviews-tab', this)">⭐ إدارة التقييمات</button>
       </div>
 
       <!-- تبويب إضافة حساب -->
       <div id="accounts-tab" class="admin-tab-content active">
-        <h3 style="font-size:15px;color:var(--text-muted);margin-bottom:20px;">أضف حساباً جديداً للعرض</h3>
+        <h3 style="font-size:16px;color:var(--text-muted);margin-bottom:24px;">أضف حساباً جديداً للعرض (يظهر للجميع فوراً)</h3>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">رابط الصورة</label>
+            <label class="form-label">📷 رابط الصورة</label>
             <input type="text" class="form-input" id="new-acc-img" placeholder="https://..." />
           </div>
           <div class="form-group">
-            <label class="form-label">السعر (دت)</label>
+            <label class="form-label">💰 السعر (دت)</label>
             <input type="number" class="form-input" id="new-acc-price" placeholder="مثال: 150" min="0" />
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">وصف الحساب</label>
+          <label class="form-label">📝 وصف الحساب</label>
           <textarea class="form-input" id="new-acc-desc" placeholder="تفاصيل الحساب: المستوى، الشخصيات، الكوستيومات..."></textarea>
         </div>
-        <button class="btn-admin-primary" onclick="addAccount()"><i class="fas fa-plus"></i> إضافة الحساب</button>
+        <button class="btn-admin-primary" onclick="addAccount()"><i class="fas fa-plus-circle"></i> إضافة الحساب</button>
       </div>
 
       <!-- تبويب تعديل الأسعار -->
       <div id="prices-tab" class="admin-tab-content">
-        <h3 style="font-size:15px;color:var(--text-muted);margin-bottom:20px;">تعديل أسعار الجواهر والعضويات</h3>
+        <h3 style="font-size:16px;color:var(--text-muted);margin-bottom:24px;">تعديل أسعار الجواهر والعضويات</h3>
         <div class="price-edit-grid" id="prices-edit-grid">
           <!-- تُملأ ديناميكياً -->
         </div>
-        <button class="btn-admin-primary" style="margin-top:20px" onclick="savePrices()"><i class="fas fa-floppy-disk"></i> حفظ الأسعار</button>
+        <button class="btn-admin-primary" style="margin-top:24px" onclick="savePrices()"><i class="fas fa-save"></i> حفظ الأسعار</button>
       </div>
 
       <!-- تبويب إعدادات الموقع -->
       <div id="settings-tab" class="admin-tab-content">
-        <h3 style="font-size:15px;color:var(--text-muted);margin-bottom:20px;">إعدادات الموقع المتقدمة</h3>
+        <h3 style="font-size:16px;color:var(--text-muted);margin-bottom:24px;">إعدادات الموقع المتقدمة</h3>
         
         <div class="form-group">
           <label class="form-label">🎨 اللون الأساسي (أحمر)</label>
-          <input type="color" class="form-input" id="theme-red" style="height:45px;padding:5px;" value="#ff4655" />
+          <input type="color" class="form-input" id="theme-red" style="height:48px;padding:6px;" value="#ff4655" />
         </div>
         <div class="form-group">
           <label class="form-label">✨ اللون الذهبي</label>
-          <input type="color" class="form-input" id="theme-gold" style="height:45px;padding:5px;" value="#ffd700" />
+          <input type="color" class="form-input" id="theme-gold" style="height:48px;padding:6px;" value="#ffd700" />
         </div>
         <div class="form-group">
           <label class="form-label">💙 اللون السماوي</label>
-          <input type="color" class="form-input" id="theme-cyan" style="height:45px;padding:5px;" value="#00e5ff" />
+          <input type="color" class="form-input" id="theme-cyan" style="height:48px;padding:6px;" value="#00e5ff" />
         </div>
         
-        <div style="border-top:1px solid var(--border);margin:20px 0;"></div>
+        <div style="border-top:1px solid var(--border);margin:24px 0;"></div>
         
         <div class="form-group">
           <label class="form-label">👑 اسم المستخدم للأدمن</label>
@@ -984,87 +1096,12 @@
           <input type="password" class="form-input" id="admin-password" placeholder="••••••••" />
         </div>
         <button class="btn-admin-primary" onclick="saveSettings()"><i class="fas fa-save"></i> حفظ الإعدادات</button>
-        <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">⚠️ بعد تغيير بيانات الدخول، سيتم تسجيل خروجك تلقائياً.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================================================
-       Hero Section
-  ============================================================ -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-badge"><i class="fas fa-fire"></i> متجر فري فاير الرسمي #1 في تونس</div>
-      <h1>اشحن وانتصر<br /><span>مع DRAGON STORE</span></h1>
-      <p>أسرع وأأمن متجر لشحن جواهر فري فاير وشراء الحسابات المميزة بأفضل الأسعار</p>
-      <div class="hero-btns">
-        <a href="#diamonds" class="btn-primary"><i class="fas fa-gem"></i> اشحن الآن</a>
-        <a href="#accounts" class="btn-outline"><i class="fas fa-gamepad"></i> تصفح الحسابات</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       قسم شحن الجواهر
-  ============================================================ -->
-  <section id="diamonds">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label"><i class="fas fa-gem"></i> شحن فوري</span>
-        <h2 class="section-title">جواهر & عضويات</h2>
-        <p class="section-desc">أسعار مضمونة وتسليم فوري عبر الواتساب</p>
-      </div>
-      <div class="diamonds-grid" id="diamonds-grid">
-        <!-- تُملأ ديناميكياً من JavaScript -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       قسم الحسابات
-  ============================================================ -->
-  <section id="accounts">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label"><i class="fas fa-gamepad"></i> حسابات للبيع</span>
-        <h2 class="section-title">حسابات مميزة</h2>
-        <p class="section-desc">حسابات فري فاير عالية المستوى بأفضل الأسعار</p>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:16px;">⚠️ بعد تغيير بيانات الدخول، سيتم تسجيل خروجك تلقائياً.</p>
       </div>
 
-      <!-- بانر البيع -->
-      <div class="sell-banner">
-        <span class="sell-banner-icon">📢</span>
-        <div class="sell-banner-text">
-          <h3>هل تريد بيع حسابك؟</h3>
-          <p>تواصل معنا مباشرة وسنساعدك في عرضه بأفضل طريقة</p>
-        </div>
-        <a href="https://chat.whatsapp.com/JZzCh5MJ4sY7NbVer66LOB" target="_blank" class="sell-banner-link">
-          <i class="fab fa-whatsapp"></i> انضم لجروب الواتساب
-        </a>
-      </div>
-
-      <div class="accounts-grid" id="accounts-grid">
-        <!-- تُملأ ديناميكياً -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       قسم التقييمات
-  ============================================================ -->
-  <section id="reviews">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label"><i class="fas fa-star"></i> آراء العملاء</span>
-        <h2 class="section-title">تقييمات حقيقية</h2>
-        <p class="section-desc">ماذا يقول عملاؤنا عن تجربتهم معنا</p>
-      </div>
-
-      <div class="reviews-grid" id="reviews-grid"></div>
-
-      <!-- نموذج إضافة تقييم (للأدمن) -->
-      <div id="add-review-form">
-        <h3 style="font-size:15px;color:var(--gold);margin-bottom:18px;"><i class="fas fa-star"></i> إضافة تقييم جديد</h3>
+      <!-- تبويب إدارة التقييمات -->
+      <div id="reviews-tab" class="admin-tab-content">
+        <h3 style="font-size:16px;color:var(--text-muted);margin-bottom:24px;">إضافة تقييم جديد</h3>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">اسم العميل</label>
@@ -1082,6 +1119,81 @@
         <button class="btn-admin-primary" onclick="addReview()"><i class="fas fa-plus"></i> إضافة التقييم</button>
       </div>
     </div>
+  </div>
+
+  <!-- ============================================================
+       Hero Section
+  ============================================================ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge" data-aos="fade-up"><i class="fas fa-fire"></i> متجر فري فاير الرسمي #1 في تونس</div>
+      <h1 data-aos="fade-up">اشحن وانتصر<br /><span>مع DRAGON STORE</span></h1>
+      <p data-aos="fade-up">أسرع وأأمن متجر لشحن جواهر فري فاير وشراء الحسابات المميزة بأفضل الأسعار</p>
+      <div class="hero-btns" data-aos="fade-up">
+        <a href="#diamonds" class="btn-primary"><i class="fas fa-gem"></i> اشحن الآن</a>
+        <a href="#accounts" class="btn-outline"><i class="fas fa-gamepad"></i> تصفح الحسابات</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       قسم شحن الجواهر
+  ============================================================ -->
+  <section id="diamonds">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-label"><i class="fas fa-gem"></i> شحن فوري</span>
+        <h2 class="section-title">جواهر & عضويات VIP</h2>
+        <p class="section-desc">أسعار مضمونة وتسليم فوري عبر الواتساب</p>
+      </div>
+      <div class="diamonds-grid" id="diamonds-grid" data-aos="fade-up">
+        <!-- تُملأ ديناميكياً من JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       قسم الحسابات
+  ============================================================ -->
+  <section id="accounts">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-label"><i class="fas fa-gamepad"></i> حسابات للبيع</span>
+        <h2 class="section-title">حسابات مميزة</h2>
+        <p class="section-desc">حسابات فري فاير عالية المستوى بأفضل الأسعار</p>
+      </div>
+
+      <!-- بانر البيع -->
+      <div class="sell-banner" data-aos="fade-up">
+        <span class="sell-banner-icon">📢</span>
+        <div class="sell-banner-text">
+          <h3>هل تريد بيع حسابك؟</h3>
+          <p>تواصل معنا مباشرة وسنساعدك في عرضه بأفضل طريقة</p>
+        </div>
+        <a href="https://chat.whatsapp.com/JZzCh5MJ4sY7NbVer66LOB" target="_blank" class="sell-banner-link">
+          <i class="fab fa-whatsapp"></i> انضم لجروب الواتساب
+        </a>
+      </div>
+
+      <div class="accounts-grid" id="accounts-grid" data-aos="fade-up">
+        <!-- تُملأ ديناميكياً -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       قسم التقييمات
+  ============================================================ -->
+  <section id="reviews">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-label"><i class="fas fa-star"></i> آراء العملاء</span>
+        <h2 class="section-title">تقييمات حقيقية</h2>
+        <p class="section-desc">ماذا يقول عملاؤنا عن تجربتهم معنا</p>
+      </div>
+
+      <div class="reviews-grid" id="reviews-grid" data-aos="fade-up"></div>
+    </div>
   </section>
 
   <!-- ============================================================
@@ -1091,7 +1203,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <span class="logo">DRAGON ★ STORE</span>
+          <span class="logo"><i class="fas fa-dragon"></i> DRAGON ★ STORE</span>
           <p>متجرك الموثوق لشحن جواهر فري فاير وشراء الحسابات المميزة في تونس. أسرع خدمة وأأمن تعامل.</p>
           <div class="social-links">
             <a href="https://chat.whatsapp.com/JZzCh5MJ4sY7NbVer66LOB" target="_blank" class="social-link"><i class="fab fa-whatsapp"></i></a>
@@ -1114,12 +1226,12 @@
             <li><a href="https://chat.whatsapp.com/JZzCh5MJ4sY7NbVer66LOB" target="_blank"><i class="fab fa-whatsapp"></i> جروب الواتساب</a></li>
             <li><a href="https://wa.me/21623127209" target="_blank"><i class="fab fa-whatsapp"></i> +216 23 127 209</a></li>
           </ul>
-          <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">متاح 24/7 للرد على استفساراتك</p>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:16px;">متاح 24/7 للرد على استفساراتك</p>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p>جميع الحقوق محفوظة © DRAGON STORE 2025</p>
+        <p>جميع الحقوق محفوظة © DRAGON STORE 2025 | تصميم وتطوير بكل ❤️</p>
       </div>
     </div>
   </footer>
@@ -1160,7 +1272,7 @@
     <div class="modal">
       <button class="modal-close" onclick="closeModal('login-modal')"><i class="fas fa-times"></i></button>
       <div class="modal-title"><i class="fas fa-lock" style="color:var(--red)"></i> لوحة التحكم</div>
-      <p class="modal-subtitle">أدخل بيانات الاعتماد للوصول</p>
+      <p class="modal-subtitle">أدخل بيانات الاعتماد للوصول إلى لوحة التحكم</p>
       <div id="login-error" class="login-error"><i class="fas fa-circle-exclamation"></i> اسم المستخدم أو كلمة المرور غير صحيحة</div>
       <div class="form-group">
         <label class="form-label">اسم المستخدم</label>
@@ -1180,7 +1292,7 @@
        مودال تعديل حساب
   ============================================================ -->
   <div class="modal-overlay" id="edit-account-modal">
-    <div class="modal" style="max-width:500px">
+    <div class="modal" style="max-width:550px">
       <button class="modal-close" onclick="closeModal('edit-account-modal')"><i class="fas fa-times"></i></button>
       <div class="modal-title"><i class="fas fa-pen" style="color:var(--gold)"></i> تعديل الحساب</div>
       <input type="hidden" id="edit-acc-id" />
@@ -1198,20 +1310,34 @@
         <label class="form-label">الوصف</label>
         <textarea class="form-input" id="edit-acc-desc" style="min-height:100px"></textarea>
       </div>
-      <button class="btn-admin-primary" style="width:100%" onclick="saveEditAccount()"><i class="fas fa-floppy-disk"></i> حفظ التعديلات</button>
+      <button class="btn-admin-primary" style="width:100%" onclick="saveEditAccount()"><i class="fas fa-save"></i> حفظ التعديلات</button>
     </div>
   </div>
 
   <!-- ============================================================
-       JavaScript الرئيسي
+       JavaScript الرئيسي (تم إصلاح جميع الأخطاء)
   ============================================================ -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
+    AOS.init({ duration: 800, once: true, offset: 100 });
+    
+    // شريط التحميل
+    window.addEventListener('load', () => {
+      document.getElementById('loadingBar').classList.add('active');
+      setTimeout(() => {
+        document.getElementById('loadingBar').style.transform = 'scaleX(1)';
+      }, 100);
+      setTimeout(() => {
+        document.getElementById('loadingBar').classList.remove('active');
+        document.getElementById('loadingBar').style.transform = 'scaleX(0)';
+      }, 800);
+    });
+
     // ============================================================
     // بيانات الاعتماد الافتراضية
     // ============================================================
     let ADMIN_USER = 'dragonstore';
     let ADMIN_PASS = 'dragon54321';
-    const WHATSAPP_GROUP = 'https://chat.whatsapp.com/JZzCh5MJ4sY7NbVer66LOB';
     const WHATSAPP_NUMBER = 'https://wa.me/21623127209';
 
     // ============================================================
@@ -1265,12 +1391,8 @@
       document.documentElement.style.setProperty('--red', red);
       document.documentElement.style.setProperty('--gold', gold);
       document.documentElement.style.setProperty('--cyan', cyan);
-      
-      // تحديث الـ glow
       document.documentElement.style.setProperty('--red-glow', `${red}59`);
       document.documentElement.style.setProperty('--gold-glow', `${gold}4D`);
-      
-      // تحديث لون الحدود
       document.documentElement.style.setProperty('--border', `${red}2E`);
       document.documentElement.style.setProperty('--border-gold', `${gold}40`);
     }
@@ -1287,29 +1409,29 @@
       buildPriceEditGrid();
       loadSettingsToForm();
 
-      // إظهار مودال الترحيب عند الزيارة الأولى
       if (!lsGet('visited', false)) {
-        setTimeout(() => openModal('welcome-modal'), 800);
+        setTimeout(() => openModal('welcome-modal'), 1000);
         lsSet('visited', true);
       }
     });
 
-    // تحميل الإعدادات إلى النموذج
     function loadSettingsToForm() {
-      document.getElementById('theme-red').value = lsGet('theme_red', '#ff4655');
-      document.getElementById('theme-gold').value = lsGet('theme_gold', '#ffd700');
-      document.getElementById('theme-cyan').value = lsGet('theme_cyan', '#00e5ff');
-      document.getElementById('admin-username').value = ADMIN_USER;
-      document.getElementById('admin-password').value = '';
+      const themeRed = document.getElementById('theme-red');
+      const themeGold = document.getElementById('theme-gold');
+      const themeCyan = document.getElementById('theme-cyan');
+      const adminUsername = document.getElementById('admin-username');
+      if (themeRed) themeRed.value = lsGet('theme_red', '#ff4655');
+      if (themeGold) themeGold.value = lsGet('theme_gold', '#ffd700');
+      if (themeCyan) themeCyan.value = lsGet('theme_cyan', '#00e5ff');
+      if (adminUsername) adminUsername.value = ADMIN_USER;
     }
 
-    // حفظ الإعدادات
     function saveSettings() {
-      const newRed = document.getElementById('theme-red').value;
-      const newGold = document.getElementById('theme-gold').value;
-      const newCyan = document.getElementById('theme-cyan').value;
-      const newUsername = document.getElementById('admin-username').value.trim();
-      const newPassword = document.getElementById('admin-password').value.trim();
+      const newRed = document.getElementById('theme-red')?.value;
+      const newGold = document.getElementById('theme-gold')?.value;
+      const newCyan = document.getElementById('theme-cyan')?.value;
+      const newUsername = document.getElementById('admin-username')?.value.trim();
+      const newPassword = document.getElementById('admin-password')?.value.trim();
       
       if (newRed) lsSet('theme_red', newRed);
       if (newGold) lsSet('theme_gold', newGold);
@@ -1326,7 +1448,6 @@
       
       loadColorSettings();
       
-      // إذا تم تغيير بيانات الدخول وكان الأدمن مسجل الدخول، نسجله خروج
       if (isAdmin && (newUsername || newPassword)) {
         showNotif('تم تغيير بيانات الدخول، سيتم تسجيل الخروج', 'info');
         setTimeout(() => logoutAdmin(), 1500);
@@ -1341,6 +1462,7 @@
     function renderDiamonds() {
       const prices = lsGet('diamond_prices', DEFAULT_PRICES);
       const grid = document.getElementById('diamonds-grid');
+      if (!grid) return;
       grid.innerHTML = '';
 
       prices.forEach(item => {
@@ -1366,6 +1488,7 @@
     function renderAccounts() {
       const accounts = lsGet('accounts', []);
       const grid = document.getElementById('accounts-grid');
+      if (!grid) return;
       grid.innerHTML = '';
 
       if (!accounts.length) {
@@ -1373,7 +1496,7 @@
           <div class="empty-accounts">
             <i class="fas fa-gamepad"></i>
             <p>لا توجد حسابات معروضة حالياً</p>
-            <p style="font-size:12px;margin-top:6px">تابعنا على الواتساب لأحدث العروض</p>
+            <p style="font-size:12px;margin-top:8px">تابعنا على الواتساب لأحدث العروض</p>
           </div>`;
         return;
       }
@@ -1394,19 +1517,19 @@
             <div class="account-price">${acc.price} دت</div>
           </div>
           <div class="account-footer">
-            <a href="${WHATSAPP_NUMBER}" target="_blank" class="btn-buy" ${acc.sold ? 'style="pointer-events:none;opacity:.4"' : ''}>
+            <a href="${WHATSAPP_NUMBER}" target="_blank" class="btn-buy" ${acc.sold ? 'style="pointer-events:none;opacity:.5"' : ''}>
               <i class="fab fa-whatsapp"></i> تواصل للشراء
             </a>
           </div>
           <div class="admin-account-btns">
             <button class="btn-admin-sm btn-toggle-sold" onclick="toggleSold(${acc.id})">
-              ${acc.sold ? '<i class="fas fa-rotate-left"></i> إلغاء البيع' : '<i class="fas fa-check"></i> تم البيع'}
+              ${acc.sold ? '<i class="fas fa-undo"></i> إلغاء البيع' : '<i class="fas fa-check-circle"></i> تم البيع'}
             </button>
-            <button class="btn-admin-sm" style="background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.2);flex:1" onclick="openEditAccount(${acc.id})">
-              <i class="fas fa-pen"></i> تعديل
+            <button class="btn-admin-sm btn-edit-account" onclick="openEditAccount(${acc.id})">
+              <i class="fas fa-edit"></i> تعديل
             </button>
             <button class="btn-admin-sm btn-delete-account" onclick="deleteAccount(${acc.id})">
-              <i class="fas fa-trash"></i>
+              <i class="fas fa-trash-alt"></i> حذف
             </button>
           </div>
         `;
@@ -1418,9 +1541,9 @@
     // إضافة حساب جديد
     // ============================================================
     function addAccount() {
-      const img   = document.getElementById('new-acc-img').value.trim();
-      const price = parseFloat(document.getElementById('new-acc-price').value);
-      const desc  = document.getElementById('new-acc-desc').value.trim();
+      const img   = document.getElementById('new-acc-img')?.value.trim() || '';
+      const price = parseFloat(document.getElementById('new-acc-price')?.value);
+      const desc  = document.getElementById('new-acc-desc')?.value.trim();
 
       if (!desc) { showNotif('يرجى إدخال وصف الحساب', 'error'); return; }
       if (isNaN(price) || price < 0) { showNotif('يرجى إدخال سعر صحيح', 'error'); return; }
@@ -1428,7 +1551,7 @@
       const accounts = lsGet('accounts', []);
       const newAcc = {
         id:   Date.now(),
-        img:  img || '',
+        img:  img,
         desc: desc,
         price: price,
         sold: false,
@@ -1436,16 +1559,13 @@
       accounts.unshift(newAcc);
       if (lsSet('accounts', accounts)) {
         renderAccounts();
-        document.getElementById('new-acc-img').value   = '';
-        document.getElementById('new-acc-price').value = '';
-        document.getElementById('new-acc-desc').value  = '';
+        if (document.getElementById('new-acc-img')) document.getElementById('new-acc-img').value = '';
+        if (document.getElementById('new-acc-price')) document.getElementById('new-acc-price').value = '';
+        if (document.getElementById('new-acc-desc')) document.getElementById('new-acc-desc').value = '';
         showNotif('تم إضافة الحساب بنجاح ✅', 'success');
       }
     }
 
-    // ============================================================
-    // تبديل حالة البيع
-    // ============================================================
     function toggleSold(id) {
       const accounts = lsGet('accounts', []);
       const idx = accounts.findIndex(a => a.id === id);
@@ -1457,11 +1577,8 @@
       }
     }
 
-    // ============================================================
-    // حذف حساب
-    // ============================================================
     function deleteAccount(id) {
-      if (!confirm('هل تريد حذف هذا الحساب نهائياً؟')) return;
+      if (!confirm('⚠️ هل تريد حذف هذا الحساب نهائياً؟')) return;
       const accounts = lsGet('accounts', []).filter(a => a.id !== id);
       if (lsSet('accounts', accounts)) {
         renderAccounts();
@@ -1469,28 +1586,26 @@
       }
     }
 
-    // ============================================================
-    // فتح نافذة تعديل الحساب
-    // ============================================================
     function openEditAccount(id) {
       const accounts = lsGet('accounts', []);
       const acc = accounts.find(a => a.id === id);
       if (!acc) return;
-      document.getElementById('edit-acc-id').value    = id;
-      document.getElementById('edit-acc-img').value   = acc.img || '';
-      document.getElementById('edit-acc-price').value = acc.price;
-      document.getElementById('edit-acc-desc').value  = acc.desc || '';
+      const editId = document.getElementById('edit-acc-id');
+      const editImg = document.getElementById('edit-acc-img');
+      const editPrice = document.getElementById('edit-acc-price');
+      const editDesc = document.getElementById('edit-acc-desc');
+      if (editId) editId.value = id;
+      if (editImg) editImg.value = acc.img || '';
+      if (editPrice) editPrice.value = acc.price;
+      if (editDesc) editDesc.value = acc.desc || '';
       openModal('edit-account-modal');
     }
 
-    // ============================================================
-    // حفظ تعديلات الحساب
-    // ============================================================
     function saveEditAccount() {
-      const id    = parseInt(document.getElementById('edit-acc-id').value);
-      const img   = document.getElementById('edit-acc-img').value.trim();
-      const price = parseFloat(document.getElementById('edit-acc-price').value);
-      const desc  = document.getElementById('edit-acc-desc').value.trim();
+      const id    = parseInt(document.getElementById('edit-acc-id')?.value);
+      const img   = document.getElementById('edit-acc-img')?.value.trim() || '';
+      const price = parseFloat(document.getElementById('edit-acc-price')?.value);
+      const desc  = document.getElementById('edit-acc-desc')?.value.trim();
 
       if (!desc) { showNotif('يرجى إدخال الوصف', 'error'); return; }
       if (isNaN(price) || price < 0) { showNotif('سعر غير صالح', 'error'); return; }
@@ -1506,12 +1621,10 @@
       }
     }
 
-    // ============================================================
-    // بناء شبكة تعديل الأسعار
-    // ============================================================
     function buildPriceEditGrid() {
       const prices = lsGet('diamond_prices', DEFAULT_PRICES);
       const grid = document.getElementById('prices-edit-grid');
+      if (!grid) return;
       grid.innerHTML = '';
 
       prices.forEach(item => {
@@ -1525,9 +1638,6 @@
       });
     }
 
-    // ============================================================
-    // حفظ الأسعار المعدلة
-    // ============================================================
     function savePrices() {
       const prices = lsGet('diamond_prices', DEFAULT_PRICES);
       let valid = true;
@@ -1548,16 +1658,14 @@
       }
     }
 
-    // ============================================================
-    // رندر التقييمات
-    // ============================================================
     function renderReviews() {
       const reviews = lsGet('reviews', DEFAULT_REVIEWS);
       const grid = document.getElementById('reviews-grid');
+      if (!grid) return;
       grid.innerHTML = '';
 
       if (!reviews.length) {
-        grid.innerHTML = '<p style="text-align:center;color:var(--text-muted)">لا توجد تقييمات بعد</p>';
+        grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px;">لا توجد تقييمات بعد</p>';
         return;
       }
 
@@ -1582,13 +1690,10 @@
       });
     }
 
-    // ============================================================
-    // إضافة تقييم جديد (الأدمن)
-    // ============================================================
     function addReview() {
-      const name  = document.getElementById('rev-name').value.trim();
-      const stars = parseInt(document.getElementById('rev-stars').value);
-      const text  = document.getElementById('rev-text').value.trim();
+      const name  = document.getElementById('rev-name')?.value.trim();
+      const stars = parseInt(document.getElementById('rev-stars')?.value);
+      const text  = document.getElementById('rev-text')?.value.trim();
 
       if (!name) { showNotif('يرجى إدخال اسم العميل', 'error'); return; }
       if (!text)  { showNotif('يرجى إدخال نص التقييم', 'error'); return; }
@@ -1604,18 +1709,15 @@
       });
       if (lsSet('reviews', reviews)) {
         renderReviews();
-        document.getElementById('rev-name').value  = '';
-        document.getElementById('rev-text').value  = '';
-        document.getElementById('rev-stars').value = '5';
+        if (document.getElementById('rev-name')) document.getElementById('rev-name').value = '';
+        if (document.getElementById('rev-text')) document.getElementById('rev-text').value = '';
+        if (document.getElementById('rev-stars')) document.getElementById('rev-stars').value = '5';
         showNotif('تم إضافة التقييم ✅', 'success');
       }
     }
 
-    // ============================================================
-    // حذف تقييم
-    // ============================================================
     function deleteReview(id) {
-      if (!confirm('حذف هذا التقييم؟')) return;
+      if (!confirm('🗑️ حذف هذا التقييم؟')) return;
       const reviews = lsGet('reviews', DEFAULT_REVIEWS).filter(r => r.id !== id);
       if (lsSet('reviews', reviews)) {
         renderReviews();
@@ -1628,40 +1730,47 @@
     // ============================================================
     let isAdmin = false;
 
-    document.getElementById('admin-lock-btn').addEventListener('click', () => {
-      if (isAdmin) { /* لا شيء */ return; }
-      openModal('login-modal');
-    });
+    const adminBtn = document.getElementById('admin-lock-btn');
+    if (adminBtn) {
+      adminBtn.addEventListener('click', () => {
+        if (isAdmin) return;
+        openModal('login-modal');
+      });
+    }
 
     function doLogin() {
-      const u = document.getElementById('login-username').value.trim();
-      const p = document.getElementById('login-password').value.trim();
+      const u = document.getElementById('login-username')?.value.trim();
+      const p = document.getElementById('login-password')?.value.trim();
       const errEl = document.getElementById('login-error');
 
       if (u === ADMIN_USER && p === ADMIN_PASS) {
         isAdmin = true;
         document.body.classList.add('admin-mode');
-        document.getElementById('lock-icon').className = 'fas fa-unlock';
-        document.getElementById('admin-lock-btn').classList.add('active');
+        const lockIcon = document.getElementById('lock-icon');
+        const adminBtnEl = document.getElementById('admin-lock-btn');
+        if (lockIcon) lockIcon.className = 'fas fa-unlock-alt';
+        if (adminBtnEl) adminBtnEl.classList.add('active');
         closeModal('login-modal');
-        document.getElementById('login-username').value = '';
-        document.getElementById('login-password').value = '';
-        errEl.style.display = 'none';
-        showNotif('مرحباً بك أدمن! 👑', 'success');
+        if (document.getElementById('login-username')) document.getElementById('login-username').value = '';
+        if (document.getElementById('login-password')) document.getElementById('login-password').value = '';
+        if (errEl) errEl.style.display = 'none';
+        showNotif('مرحباً بك أدمن! 👑 يمكنك الآن إدارة الموقع بالكامل', 'success');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        errEl.style.display = 'flex';
-        document.getElementById('login-password').value = '';
+        if (errEl) errEl.style.display = 'flex';
+        if (document.getElementById('login-password')) document.getElementById('login-password').value = '';
       }
     }
 
     function logoutAdmin() {
-      if (!confirm('هل تريد تسجيل الخروج؟')) return;
+      if (!confirm('هل تريد تسجيل الخروج من لوحة التحكم؟')) return;
       isAdmin = false;
       document.body.classList.remove('admin-mode');
-      document.getElementById('lock-icon').className = 'fas fa-lock';
-      document.getElementById('admin-lock-btn').classList.remove('active');
-      showNotif('تم تسجيل الخروج', 'info');
+      const lockIcon = document.getElementById('lock-icon');
+      const adminBtnEl = document.getElementById('admin-lock-btn');
+      if (lockIcon) lockIcon.className = 'fas fa-crown';
+      if (adminBtnEl) adminBtnEl.classList.remove('active');
+      showNotif('تم تسجيل الخروج من لوحة التحكم', 'info');
     }
 
     // ============================================================
@@ -1670,7 +1779,8 @@
     function switchAdminTab(tabId, btn) {
       document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) targetTab.classList.add('active');
       btn.classList.add('active');
       if (tabId === 'prices-tab') buildPriceEditGrid();
       if (tabId === 'settings-tab') loadSettingsToForm();
@@ -1680,42 +1790,41 @@
     // دوال المودال
     // ============================================================
     function openModal(id) {
-      document.getElementById(id).classList.add('open');
-      document.body.style.overflow = 'hidden';
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
     }
 
     function closeModal(id) {
-      document.getElementById(id).classList.remove('open');
-      document.body.style.overflow = '';
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
     }
 
-    // إغلاق المودال بالنقر خارجه
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
       overlay.addEventListener('click', e => {
         if (e.target === overlay) closeModal(overlay.id);
       });
     });
 
-    // ============================================================
-    // الإشعارات
-    // ============================================================
     function showNotif(msg, type = 'info') {
       const icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', info: 'fa-circle-info' };
       const container = document.getElementById('notifications');
+      if (!container) return;
       const div = document.createElement('div');
       div.className = `notif ${type}`;
       div.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${msg}`;
       container.appendChild(div);
-
       setTimeout(() => {
         div.classList.add('fade-out');
         setTimeout(() => div.remove(), 350);
-      }, 3200);
+      }, 3500);
     }
 
-    // ============================================================
-    // الحماية من XSS
-    // ============================================================
     function escHtml(str) {
       if (!str) return '';
       return String(str)
@@ -1726,26 +1835,34 @@
         .replace(/'/g, '&#039;');
     }
 
-    // ============================================================
     // تفعيل روابط التنقل
-    // ============================================================
     document.querySelectorAll('nav a').forEach(link => {
-      link.addEventListener('click', () => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
         document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
+        this.classList.add('active');
+        const targetId = this.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     });
 
-    // تحديث الرابط النشط عند التمرير
     const sections = ['diamonds', 'accounts', 'reviews'];
     window.addEventListener('scroll', () => {
       let current = '';
       sections.forEach(id => {
         const el = document.getElementById(id);
-        if (el && window.scrollY >= el.offsetTop - 120) current = id;
+        if (el && window.scrollY >= el.offsetTop - 150) current = id;
       });
       document.querySelectorAll('nav a').forEach(link => {
-        link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+        const href = link.getAttribute('href');
+        if (href && href.substring(1) === current) {
+          link.classList.add('active');
+        } else if (href && href.substring(1) !== current) {
+          link.classList.remove('active');
+        }
       });
     });
   </script>
